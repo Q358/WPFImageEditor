@@ -1,0 +1,22 @@
+﻿<Window x:Class="CaseGuard_Rectangle_Assessment.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:CaseGuard_Rectangle_Assessment"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+    <StackPanel>
+    <Canvas Name="MainCanvas">
+        <Image HorizontalAlignment="Center" MaxHeight="500" Margin="10" VerticalAlignment="Center" MaxWidth="500" 
+               MouseEnter="OnImageEnter" MouseLeave="OnImageExit" Name="MainImage" Stretch="Uniform" 
+               MouseLeftButtonDown="CreateRectangle" MouseLeftButtonUp="MouseReleased"/>
+    </Canvas>
+    <ColorPicker x:Name="ColorPicker"
+            ColorSpectrumShape="Ring"
+            IsColorPreviewVisible="False"
+            IsColorChannelTextInputVisible="False"
+            IsHexInputVisible="False"/>
+    <Button Click="Upload_Image" Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom">Upload Image</Button>
+    </StackPanel>
+</Window>
