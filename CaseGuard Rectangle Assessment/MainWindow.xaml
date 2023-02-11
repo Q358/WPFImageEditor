@@ -7,16 +7,14 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
     <StackPanel>
-    <Canvas Name="MainCanvas">
-        <Image HorizontalAlignment="Center" MaxHeight="500" Margin="10" VerticalAlignment="Center" MaxWidth="500" 
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+            <Button Click="Upload_Image" Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0 0 100 0">Upload Image</Button>
+            <Button Click="Save_Image" Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom">Save Image</Button>
+        </StackPanel>
+        <Canvas Name="MainCanvas" HorizontalAlignment="Left" Margin="20">
+            <Image HorizontalAlignment="Center" MaxHeight="500" VerticalAlignment="Center" MaxWidth="500" 
                MouseEnter="OnImageEnter" MouseLeave="OnImageExit" Name="MainImage" Stretch="Uniform" 
-               MouseLeftButtonDown="CreateRectangle" MouseLeftButtonUp="MouseReleased"/>
-    </Canvas>
-    <ColorPicker x:Name="ColorPicker"
-            ColorSpectrumShape="Ring"
-            IsColorPreviewVisible="False"
-            IsColorChannelTextInputVisible="False"
-            IsHexInputVisible="False"/>
-    <Button Click="Upload_Image" Width="100" HorizontalAlignment="Center" VerticalAlignment="Bottom">Upload Image</Button>
+               MouseLeftButtonDown="CreateRectangle" MouseLeftButtonUp="MouseReleased" MouseMove="EditRectangleSize"/>
+        </Canvas>
     </StackPanel>
 </Window>

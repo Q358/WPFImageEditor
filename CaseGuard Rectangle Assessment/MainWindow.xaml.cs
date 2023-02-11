@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,12 @@ namespace CaseGuard_Rectangle_Assessment
     {
         private Boolean inside  = false;
         private Boolean mouseUp = false;
+        private Point start_pos = new Point(0, 0);
+
+        // I understand that these values do not dynamically update the UI Element, but they are a temporary measure to allow the application to run
+        private int width = 0;
+        private int height = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -52,27 +59,56 @@ namespace CaseGuard_Rectangle_Assessment
 
         private void CreateRectangle(object sender, MouseButtonEventArgs e)
         {
+            mouseUp = false;
             if (inside)
             {
-                Trace.WriteLine("creating");
-                Point start_pos = Mouse.GetPosition(MainCanvas);
-                SolidColorBrush clr = new SolidColorBrush("#108beb");
-                Rectangle rect = new Rectangle()
+                Trace.WriteLine("creating", mouseUp.ToString());
+                start_pos = e.GetPosition(MainCanvas);
+
+                SolidColorBrush rect_fill = new SolidColorBrush(Color.FromArgb(255, 255, 255, 0));
+                // rect_fill.Color = Color.FromArgb(255, 255, 255, 0);
+
+                Rectangle rect = new()
                 {
-                    Fill = "Green";
+                    Fill = rect_fill,
+                    Width = width,
+                    Height = height,
                 };
-                while (!mouseUp)
-                {
-                    Point current_pos = Mouse.GetPosition(MainCanvas);
-                    rect.Width = Math.Abs(start_pos.X - current_pos.X);
-                    rect.Width = Math.Abs(start_pos.Y - current_pos.Y);
-                }
+                MainCanvas.Children.Add(rect);
+                Canvas.SetLeft(rect, start_pos.X);
+                Canvas.SetBottom(rect, start_pos.Y);
             }
         }
 
         private void MouseReleased(object sender, MouseEventArgs e)
         {
+            Trace.WriteLine("ending", mouseUp.ToString());
             mouseUp = true;
+        }
+
+        private void EditRectangleSize(object sender, MouseEventArgs e)
+        {
+            if(inside & !mouseUp)
+            {
+                Point current_pos = e.GetPosition(MainCanvas);
+                width = Math.Abs(Convert.ToInt32(start_pos.X) - Convert.ToInt32(current_pos.X));
+                height = Math.Abs(Convert.ToInt32(start_pos.Y) - Convert.ToInt32(current_pos.Y));
+                Trace.WriteLine(width.ToString() + " | " + height.ToString() + " | " + current_pos.ToString() + " | " + e.LeftButton);
+            }
+        }
+
+        private void Save_Image(object sender, RoutedEventArgs e)
+        {
+            // SaveFileDialog saveFileDialog = new SaveFileDialog();
+            // saveFileDialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            // saveFileDialog.Filter = "Image file (*.jpeg)|*.jpg";
+            RenderTargetBitmap bitmap = new RenderTargetBitmap((int)this.MainImage.ActualWidth, (int)this.MainImage.ActualHeight, 96, 96, PixelFormats.Pbgra32);
+            bitmap.Render(this.MainImage);
+            FileStream stream = File.Create(@$"{Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments)}/rectangle_image.jpeg");
+            JpegBitmapEncoder encoder = new JpegBitmapEncoder();
+            encoder.QualityLevel = 90;
+            encoder.Frames.Add(BitmapFrame.Create(bitmap));
+            encoder.Save(stream);
         }
     }
 }
